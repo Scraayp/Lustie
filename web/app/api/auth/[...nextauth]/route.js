@@ -1,10 +1,11 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 
-import User from "@/models/user";
-import { connectToDB } from "@/utils/database";
+import User from '@/models/user';
+import { connectToDB } from '@/utils/database';
 
 const handler = NextAuth({
+  secret: process.env.SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
@@ -30,14 +31,14 @@ const handler = NextAuth({
         if (!userExists) {
           await User.create({
             email: profile.email,
-            username: profile.name.replace(" ", "").toLowerCase(),
+            username: profile.name.replace(' ', '').toLowerCase(),
             image: profile.picture,
           });
         }
 
         return true;
       } catch (error) {
-        console.log("Error checking if user exists: ", error.message);
+        console.log('Error checking if user exists: ', error.message);
         return false;
       }
     },
