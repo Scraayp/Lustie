@@ -14,13 +14,17 @@ export class TasksController {
 
   @Get('/:id')
   getTaskById(@Param('id') id: string): Task {
-    console.log('test');
-    console.log(this.tasksService.getTaskById(id));
     return this.tasksService.getTaskById(id);
   }
 
   @Post()
   createTask(@Body() CreateTaskDto: CreateTaskDto): Task {
     return this.tasksService.createTask(CreateTaskDto);
+  }
+
+  @Post('/delete/:id')
+  deleteTask(@Param('id') id: string): boolean {
+    this.tasksService.deleteTask(id);
+    return true;
   }
 }
