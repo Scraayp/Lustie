@@ -14,7 +14,15 @@ import {
 const Nav = () => {
   const { data: session } = useSession();
 
+  const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -34,19 +42,16 @@ const Nav = () => {
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
-              Create Post
+              Create A Task
             </Link>
-            {/* @ts-ignore */}
+
             <button type="button" onClick={signOut} className="outline_btn">
               Sign Out
             </button>
 
             <Link href="/profile">
               <Image
-                src={
-                  session?.user.image ||
-                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'
-                }
+                src={session?.user.image}
                 width={37}
                 height={37}
                 className="rounded-full"
@@ -56,16 +61,19 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            <button
-              type="button"
-              key="sign_in"
-              onClick={() => {
-                signIn();
-              }}
-              className="black_btn"
-            >
-              Sign in
-            </button>
+            {providers &&
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={() => {
+                    signIn(provider.id);
+                  }}
+                  className="black_btn"
+                >
+                  Sign in
+                </button>
+              ))}
           </>
         )}
       </div>
@@ -75,10 +83,7 @@ const Nav = () => {
         {session?.user ? (
           <div className="flex">
             <Image
-              src={
-                session?.user.image ||
-                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'
-              }
+              src={session?.user.image}
               width={37}
               height={37}
               className="rounded-full"
@@ -100,7 +105,7 @@ const Nav = () => {
                   className="dropdown_link"
                   onClick={() => setToggleDropdown(false)}
                 >
-                  Create Prompt
+                  Create Task
                 </Link>
                 <button
                   type="button"
@@ -117,16 +122,19 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            <button
-              type="button"
-              key="sign_in"
-              onClick={() => {
-                signIn();
-              }}
-              className="black_btn"
-            >
-              Sign in
-            </button>
+            {providers &&
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={() => {
+                    signIn(provider.id);
+                  }}
+                  className="black_btn"
+                >
+                  Sign in
+                </button>
+              ))}
           </>
         )}
       </div>
